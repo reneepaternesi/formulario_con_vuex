@@ -1,6 +1,6 @@
 <template>
   <b-container class="form-container">
-    <b-form @submit.stop.prevent="onSubmit" v-if="show" autocomplete="off">
+    <b-form @submit.stop.prevent="onSubmit" autocomplete="off">
       <b-row>
         <b-col>
           <b-form-group
@@ -185,7 +185,6 @@ export default {
         "Tierra del Fuego, Antártida e Islas del Atlántico Sur",
         "Tucumán",
       ],
-      show: true,
       formValidationState: {
         nameBlured: false,
         lastNameBlured: false,
@@ -212,10 +211,6 @@ export default {
       this.form.province = null;
       this.form.phone = "";
       this.formValidationState.phoneBlured = false;
-      this.show = false;
-      this.$nextTick(() => {
-        this.show = true;
-      });
     },
     validString(text) {
       return text.length >= 2;
