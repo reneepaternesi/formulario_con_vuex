@@ -9,7 +9,8 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
+import apiServices from "./services/services";
 
 export default {
   name: "App",
@@ -18,16 +19,15 @@ export default {
   },
   methods: {
     addUser(user) {
-      this.users.push({
-        ...user,
-      });
+      apiServices
+        .saveUser(user)
+        .then()
+        .catch((err) => console.log(err));
     },
-    ...mapActions("users", ["getUsers"]),
+    ...mapActions(["getUsers"]),
   },
   computed: {
-    ...mapState("users", {
-      users: "users",
-    }),
+    ...mapGetters(["users"]),
   },
 };
 </script>
