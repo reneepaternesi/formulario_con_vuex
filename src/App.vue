@@ -5,7 +5,7 @@
       <router-link to="/users">Lista de Usuarios</router-link> |
       <router-link to="/create-user">Crear Usuario</router-link>
     </nav>
-    <router-view :users="users" />
+    <router-view :users="users" @add-user="addUser" />
   </div>
 </template>
 <script>
@@ -21,8 +21,23 @@ export default {
     addUser(user) {
       apiServices
         .saveUser(user)
-        .then()
-        .catch((err) => console.log(err));
+        .then(
+          this.$bvToast.toast("Success", {
+            title: "El usuario ha sido creado correctamente",
+            variant: "success",
+            solid: true,
+            noAutoHide: true,
+          })
+        )
+        .catch((err) => {
+          console.log(err);
+          this.$bvToast.toast("Error", {
+            title: `No pudimos recuperar la lista de usuarios, vuelve a intentarlo`,
+            variant: "danger",
+            solid: true,
+            noAutoHide: true,
+          });
+        });
     },
     ...mapActions(["getUsers"]),
   },
@@ -68,5 +83,82 @@ nav {
     rgba(238, 174, 202, 1) 0%,
     rgba(148, 187, 233, 1) 100%
   );
+}
+
+.b-toaster.b-toaster-top-right {
+  right: 15px;
+
+  .b-toaster-slot.vue-portal-target {
+    font-family: "Dosis", sans-serif;
+
+    .toast {
+      border: none;
+
+      .toast-header {
+        border: none;
+        background-color: #6c757d;
+        color: white;
+        height: 56px;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 22px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
+        border-radius: 4px;
+
+        .close {
+          color: #bebebe;
+          font-weight: 400;
+          text-shadow: none;
+          border: none;
+          background-color: transparent;
+
+          &:focus,
+          &:active {
+            border: none;
+            outline: none;
+          }
+        }
+      }
+      .toast-body {
+        display: none;
+      }
+    }
+
+    .b-toast-danger {
+      .toast-header {
+        border-left: 4px solid red;
+
+        &:before {
+          content: url("../public/assets/danger.svg");
+          height: 25px;
+          margin-right: 13px;
+        }
+      }
+    }
+
+    .b-toast-success {
+      .toast-header {
+        border-left: 4px solid #9df4e2;
+
+        &:before {
+          content: url("../public/assets/success.svg");
+          height: 25px;
+          margin-right: 13px;
+        }
+      }
+    }
+
+    .b-toast-info {
+      .toast-header {
+        border-left: 4px solid #83aefb;
+
+        &:before {
+          content: url("../public/assets/info.svg");
+          height: 25px;
+          margin-right: 13px;
+        }
+      }
+    }
+  }
 }
 </style>

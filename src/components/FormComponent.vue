@@ -76,25 +76,75 @@
         </b-col>
         <b-col>
           <b-form-group
-            id="input-birthday-group"
-            label="Fecha de Nacimiento"
-            label-for="input-birthday"
+            id="input-address-group"
+            label="Dirección:"
+            label-for="input-address"
           >
             <b-form-input
-              id="input-birthday"
-              v-model="form.birthday"
-              type="date"
-              placeholder="dd / mm / aaaa"
+              id="input-address"
+              v-model="form.address"
+              placeholder="Calle, Nro, Piso, Departamento"
               required
               v-bind:class="{
                 'is-invalid':
-                  !validBirthday() && formValidationState.birthdayBlured,
-                'is-valid': validBirthday(),
+                  !validString(form.address) &&
+                  formValidationState.addressBlured,
+                'is-valid': validString(form.address),
               }"
-              v-on:blur="formValidationState.birthdayBlured = true"
+              v-on:blur="formValidationState.addressBlured = true"
             ></b-form-input>
             <b-form-invalid-feedback>
-              La fecha de nacimiento debe ser anterior al día de hoy
+              El nombre debe contener al menos 2 caracteres
+            </b-form-invalid-feedback>
+          </b-form-group>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <b-form-group
+            id="input-user-group"
+            label="Usuario:"
+            label-for="input-user"
+          >
+            <b-form-input
+              id="input-user"
+              v-model="form.user"
+              placeholder="Usuario"
+              required
+              v-bind:class="{
+                'is-invalid':
+                  !validString(form.user) && formValidationState.userBlured,
+                'is-valid': validString(form.user),
+              }"
+              v-on:blur="formValidationState.userBlured = true"
+            ></b-form-input>
+            <b-form-invalid-feedback>
+              El nombre debe contener al menos 2 caracteres
+            </b-form-invalid-feedback>
+          </b-form-group>
+        </b-col>
+        <b-col>
+          <b-form-group
+            id="input-password-group"
+            label="Contraseña:"
+            label-for="input-password"
+          >
+            <b-form-input
+              id="input-password"
+              v-model="form.password"
+              placeholder="Contraseña"
+              type="password"
+              required
+              v-bind:class="{
+                'is-invalid':
+                  !validString(form.password) &&
+                  formValidationState.passwordBlured,
+                'is-valid': validString(form.password),
+              }"
+              v-on:blur="formValidationState.passwordBlured = true"
+            ></b-form-input>
+            <b-form-invalid-feedback>
+              El nombre debe contener al menos 2 caracteres
             </b-form-invalid-feedback>
           </b-form-group>
         </b-col>
@@ -114,29 +164,6 @@
             ></b-form-select>
           </b-form-group>
         </b-col>
-        <b-col>
-          <b-form-group
-            id="input-phone-group"
-            label="Teléfono"
-            label-for="input-phone"
-          >
-            <b-form-input
-              id="input-phone"
-              v-model="form.phone"
-              type="tel"
-              placeholder="Teléfono"
-              v-bind:class="{
-                'is-invalid':
-                  !validatePhone() && formValidationState.phoneBlured,
-                'is-valid': validatePhone(),
-              }"
-              v-on:blur="formValidationState.phoneBlured = true"
-            ></b-form-input>
-            <b-form-invalid-feedback>
-              El formato de teléfono no es correcto
-            </b-form-invalid-feedback>
-          </b-form-group>
-        </b-col>
       </b-row>
       <b-button type="submit" variant="primary" :disabled="!validateForm()"
         >Agregar Usuario</b-button
@@ -154,9 +181,11 @@ export default {
         name: "",
         lastName: "",
         email: "",
-        birthday: "",
+        address: "",
         province: null,
-        phone: "",
+        isAdmin: false,
+        user: "",
+        password: "",
       },
       provinces: [
         { text: "Seleccione una provincia", value: null },
@@ -189,8 +218,9 @@ export default {
         nameBlured: false,
         lastNameBlured: false,
         emailBlured: false,
-        birthdayBlured: false,
-        phoneBlured: false,
+        addressBlured: false,
+        userBlured: false,
+        passwordBlured: false,
       },
     };
   },
@@ -206,11 +236,13 @@ export default {
       this.formValidationState.lastNameBlured = false;
       this.form.email = "";
       this.formValidationState.emailBlured = false;
-      this.form.birthday = "";
-      this.formValidationState.birthdayBlured = false;
+      this.form.address = "";
+      this.formValidationState.addressBlured = false;
       this.form.province = null;
-      this.form.phone = "";
-      this.formValidationState.phoneBlured = false;
+      this.form.user = "";
+      this.formValidationState.userBlured = false;
+      this.form.password = "";
+      this.formValidationState.passwordBlured = false;
     },
     validString(text) {
       return text.length >= 2;
@@ -219,21 +251,14 @@ export default {
       var re = /(.+)@(.+){2,}\.(.+){2,}/;
       return re.test(this.form.email.toLowerCase());
     },
-    validBirthday() {
-      return this.form.birthday && new Date(this.form.birthday) < new Date();
-    },
-    validatePhone() {
-      var re =
-        /^((?:\(?\d{3}\)?[- .]?\d{4}|\(?\d{4}\)?[- .]?\d{3}|\(?\d{5}\)?[- .]?\d{2})[- .]?\d{4})$/;
-      return !this.form.phone || re.test(this.form.phone);
-    },
     validateForm() {
       return (
         this.validString(this.form.name) &&
         this.validString(this.form.lastName) &&
         this.validEmail() &&
-        this.validBirthday() &&
-        this.validatePhone()
+        this.validString(this.form.address) &&
+        this.validString(this.form.user) &&
+        this.validString(this.form.password)
       );
     },
   },

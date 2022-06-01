@@ -10,7 +10,7 @@ export default new Vuex.Store({
         users: []
     },
     getters: {
-        getUsers: (state) => state.users
+        users: state => state.users,
       },
     mutations: {
         SET_USERS(state, users) {
