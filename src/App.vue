@@ -5,18 +5,14 @@
       <router-link to="/users">Lista de Usuarios</router-link> |
       <router-link to="/create-user">Crear Usuario</router-link>
     </nav>
-    <router-view :users="users" @add-user="addUser" />
+    <router-view @add-user="addUser" />
   </div>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
 import apiServices from "./services/services";
 
 export default {
   name: "App",
-  async created() {
-    await this.getUsers();
-  },
   methods: {
     addUser(user) {
       apiServices
@@ -39,10 +35,6 @@ export default {
           });
         });
     },
-    ...mapActions(["getUsers"]),
-  },
-  computed: {
-    ...mapGetters(["users"]),
   },
 };
 </script>

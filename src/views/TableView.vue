@@ -7,17 +7,22 @@
 
 <script>
 import TableComponent from "../components/TableComponent.vue";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "TableView",
-  props: {
-    users: [],
+  async created() {
+    await this.getUsers();
   },
   components: { TableComponent },
   methods: {
     addUser(user) {
       this.$emit("add-user", user);
     },
+    ...mapActions(["getUsers"]),
+  },
+  computed: {
+    ...mapGetters(["users"]),
   },
 };
 </script>
