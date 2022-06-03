@@ -173,6 +173,8 @@
 </template>
 
 <script>
+import apiServices from "../services/services";
+
 export default {
   name: "FormComponent",
   data() {
@@ -226,8 +228,29 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$emit("add-user", this.form);
+      this.addUser(this.form);
       this.resetForm();
+    },
+    addUser(user) {
+      apiServices
+        .saveUser(user)
+        .then(
+          this.$bvToast.toast("Success", {
+            title: "El usuario ha sido creado correctamente",
+            variant: "success",
+            solid: true,
+            noAutoHide: true,
+          })
+        )
+        .catch((err) => {
+          console.log(err);
+          this.$bvToast.toast("Error", {
+            title: `No pudimos recuperar la lista de usuarios, vuelve a intentarlo`,
+            variant: "danger",
+            solid: true,
+            noAutoHide: true,
+          });
+        });
     },
     resetForm() {
       this.form.name = "";

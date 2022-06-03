@@ -5,37 +5,12 @@
       <router-link to="/users">Lista de Usuarios</router-link> |
       <router-link to="/create-user">Crear Usuario</router-link>
     </nav>
-    <router-view @add-user="addUser" />
+    <router-view />
   </div>
 </template>
 <script>
-import apiServices from "./services/services";
-
 export default {
   name: "App",
-  methods: {
-    addUser(user) {
-      apiServices
-        .saveUser(user)
-        .then(
-          this.$bvToast.toast("Success", {
-            title: "El usuario ha sido creado correctamente",
-            variant: "success",
-            solid: true,
-            noAutoHide: true,
-          })
-        )
-        .catch((err) => {
-          console.log(err);
-          this.$bvToast.toast("Error", {
-            title: `No pudimos recuperar la lista de usuarios, vuelve a intentarlo`,
-            variant: "danger",
-            solid: true,
-            noAutoHide: true,
-          });
-        });
-    },
-  },
 };
 </script>
 
